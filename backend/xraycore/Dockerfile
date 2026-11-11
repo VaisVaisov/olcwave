@@ -6,9 +6,9 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-RUN wget -q https://github.com/XTLS/Xray-core/releases/download/v26.3.27/Xray-linux-64.zip
+RUN wget -q https://github.com/XTLS/Xray-core/releases/download/v26.3.27/Xray-linux-arm64-v8a.zip
 
-RUN unzip Xray-linux-64.zip && rm Xray-linux-64.zip
+RUN unzip Xray-linux-arm64-v8a.zip && rm Xray-linux-arm64-v8a.zip
 
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

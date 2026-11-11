@@ -20,7 +20,7 @@ WORKDIR /build/proxy
 
 COPY proxy.go go.mod go.sum ./
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 \
     go build \
     -trimpath \
     -ldflags="-s -w" \
@@ -40,7 +40,7 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-COPY --from=builder /build/olcrtc/build/olcrtc-linux-amd64 ./olcrtc
+COPY --from=builder /build/olcrtc/build/olcrtc-linux-arm64 ./olcrtc
 COPY --from=builder /proxy ./proxy
 
 COPY entrypoint.sh .
