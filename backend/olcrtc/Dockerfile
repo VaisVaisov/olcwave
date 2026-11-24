@@ -4,23 +4,21 @@ RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN go install github.com/magefile/mage@latest
-ENV PATH="/go/bin:${PATH}"
-
-WORKDIR /build
-
-RUN git clone --depth=1 https://github.com/openlibrecommunity/olcrtc.git olcrtc
+RUN git clone --depth=1 https://github.com/VaisVaisov/olcrtc.git /build/olcrtc
+RUN git clone --depth=1 https://github.com/VaisVaisov/j.git /build/j
 
 WORKDIR /build/olcrtc
 
-RUN mage build
+# Our fork of the jitsi library carries the config.js User-Agent fix.
+RUN go mod edit -replace github.com/zarazaex69/j=/build/j \
+    && CGO_ENABLED=0 go build -buildvcs=false -o /olcrtc ./cmd/olcrtc/
 
 
 WORKDIR /build/proxy
 
 COPY proxy.go go.mod go.sum ./
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 \
+RUN CGO_ENABLED=0 GOOS=linux \
     go build \
     -trimpath \
     -ldflags="-s -w" \
@@ -40,7 +38,7 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-COPY --from=builder /build/olcrtc/build/olcrtc-linux-arm64 ./olcrtc
+COPY --from=builder /olcrtc ./olcrtc
 COPY --from=builder /proxy ./proxy
 
 COPY entrypoint.sh .
