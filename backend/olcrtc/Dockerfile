@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth=1 https://github.com/VaisVaisov/olcrtc.git /build/olcrtc
+RUN git clone --depth=1 --branch yptun-vendored https://github.com/VaisVaisov/olcrtc.git /build/olcrtc
 RUN git clone --depth=1 https://github.com/VaisVaisov/j.git /build/j
 
 WORKDIR /build/olcrtc
