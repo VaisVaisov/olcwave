@@ -24,6 +24,11 @@ class Settings(BaseSettings):
 
     RW_SQUAD_NAME: str = ""
 
+    # Optional static upstream for the olcrtc containers (no Xray needed).
+    UPSTREAM_SOCKS: str = ""
+    UPSTREAM_USER: str = ""
+    UPSTREAM_PASS: str = ""
+
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
 
     model_config = SettingsConfigDict(env_file=".env")  # pyright: ignore[reportUnannotatedClassAttribute]

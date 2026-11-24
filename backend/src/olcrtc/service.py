@@ -2,6 +2,7 @@ import asyncio
 
 from aiodocker.containers import DockerContainer
 
+from config import settings
 from xraycore.sdk import XrayCore
 from olcrtc.sdk import OlcRTC
 from olcrtc.schemas import (
@@ -60,16 +61,20 @@ class Containers:
         config_tag: str,
         short_uuid: str,
     ) -> None:
-        routing_socks_addr = ""
+        upstream_addr = settings.UPSTREAM_SOCKS
+        upstream_user = settings.UPSTREAM_USER
+        upstream_pass = settings.UPSTREAM_PASS
 
-        if await XrayCore.is_running():
-            routing_socks_addr = "host.docker.internal:10808"
+        if not upstream_addr and await XrayCore.is_running():
+            upstream_addr = "host.docker.internal:10808"
 
         await OlcRTC.run(
             config=config,
             config_tag=config_tag,
             user_id=short_uuid,
-            upstream_proxy_addr=routing_socks_addr,
+            upstream_proxy_addr=upstream_addr,
+            upstream_proxy_user=upstream_user,
+            upstream_proxy_pass=upstream_pass,
         )
 
     @staticmethod
